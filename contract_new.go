@@ -16,6 +16,45 @@ func Stock(symbol string) Contract {
 	}
 }
 
+// StockHK returns a SMART-routed Hong Kong stock [Contract] (SEHK / HKD).
+// Numeric tickers such as "700" or "00700" are accepted; leading zeros are
+// not required by the Gateway when PrimaryExchange is SEHK.
+func StockHK(symbol string) Contract {
+	return Contract{
+		Symbol:          symbol,
+		SecType:         SecTypeStock,
+		Exchange:        "SMART",
+		PrimaryExchange: "SEHK",
+		Currency:        "HKD",
+	}
+}
+
+// StockCN returns a SMART-routed mainland China A-share [Contract] (CNH).
+// primaryExchange should be "SSE" (Shanghai) or "SZSE" (Shenzhen).
+func StockCN(symbol, primaryExchange string) Contract {
+	if primaryExchange == "" {
+		primaryExchange = "SSE"
+	}
+	return Contract{
+		Symbol:          symbol,
+		SecType:         SecTypeStock,
+		Exchange:        "SMART",
+		PrimaryExchange: primaryExchange,
+		Currency:        "CNH",
+	}
+}
+
+// Crypto returns a PAXOS-routed cryptocurrency [Contract] for symbol
+// (e.g. "BTC", "ETH") quoted in USD.
+func Crypto(symbol string) Contract {
+	return Contract{
+		Symbol:   symbol,
+		SecType:  SecTypeCrypto,
+		Exchange: "PAXOS",
+		Currency: "USD",
+	}
+}
+
 // Forex returns an IDEALPRO forex pair [Contract] from a six-letter pair code
 // such as "EURUSD" (base EUR, quote/currency USD). pair must be exactly six
 // uppercase ASCII letters; invalid pairs return a [*ValidationError].
